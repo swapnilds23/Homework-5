@@ -18,19 +18,22 @@ ws.on('connection', function(socket) {
     console.log('message received: ' + data);
 
     var command = '/topic';
-    var stringArray = data.split(" ");
+    var stringArray = data.split(' ');
     var firstWord = stringArray[0];
 
     if (firstWord == command) {
       // The code will execute only when client changes the topic
-      var result = data.substr(data.indexOf(" ") + 1);
+      var result = data.substr(data.indexOf(' ') + 1);
       ws.clients.forEach(function(clientSocket) {
-        clientSocket.send('*** Topic has changed to ' + result);
+        clientSocket.send('*** Topic has changed to ' + '\'' + result + '\'');
       });
-      var new_msg = '*** Topic is ' + result;
-      if (messages[0].indexOf('Topic') > -1) {
-        messages.shift();
-        messages.unshift(new_msg);
+      var new_msg = '*** Topic is ' + '\'' + result + '\'';
+
+      if (messages.length > 0) {
+        if (~messages[0].indexOf('Topic')) {
+          messages.shift();
+          messages.unshift(new_msg);
+        }
       } else {
         messages.unshift(new_msg);
       }
